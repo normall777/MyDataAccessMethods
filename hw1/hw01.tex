@@ -1,0 +1,494 @@
+\documentclass[]{article}
+\usepackage{lmodern}
+\usepackage{amssymb,amsmath}
+\usepackage{ifxetex,ifluatex}
+\usepackage{fixltx2e} % provides \textsubscript
+\usepackage[T2A]{fontenc}
+\usepackage[english, russian]{babel}
+\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+\else % if luatex or xelatex
+  \ifxetex
+    \usepackage{mathspec}
+  \else
+    \usepackage{fontspec}
+  \fi
+  \defaultfontfeatures{Ligatures=TeX,Scale=MatchLowercase}
+\fi
+% use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+% use microtype if available
+\IfFileExists{microtype.sty}{%
+\usepackage{microtype}
+\UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\usepackage[margin=1in]{geometry}
+\usepackage{hyperref}
+\hypersetup{unicode=true,
+            pdftitle={Домашняя работа 1},
+            pdfauthor={Izotov Ilya},
+            pdfborder={0 0 0},
+            breaklinks=true}
+\urlstyle{same}  % don't use monospace font for urls
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\usepackage{framed}
+\definecolor{shadecolor}{RGB}{248,248,248}
+\newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\ImportTok}[1]{#1}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\BuiltInTok}[1]{#1}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.77,0.63,0.00}{#1}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{#1}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.64,0.00,0.00}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{#1}
+\usepackage{graphicx,grffile}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+\IfFileExists{parskip.sty}{%
+\usepackage{parskip}
+}{% else
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{6pt plus 2pt minus 1pt}
+}
+\setlength{\emergencystretch}{3em}  % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{0}
+% Redefines (sub)paragraphs to behave more like sections
+\ifx\paragraph\undefined\else
+\let\oldparagraph\paragraph
+\renewcommand{\paragraph}[1]{\oldparagraph{#1}\mbox{}}
+\fi
+\ifx\subparagraph\undefined\else
+\let\oldsubparagraph\subparagraph
+\renewcommand{\subparagraph}[1]{\oldsubparagraph{#1}\mbox{}}
+\fi
+
+%%% Use protect on footnotes to avoid problems with footnotes in titles
+\let\rmarkdownfootnote\footnote%
+\def\footnote{\protect\rmarkdownfootnote}
+
+%%% Change title format to be more compact
+\usepackage{titling}
+
+% Create subtitle command for use in maketitle
+\newcommand{\subtitle}[1]{
+  \posttitle{
+    \begin{center}\large#1\end{center}
+    }
+}
+
+\setlength{\droptitle}{-2em}
+
+  \title{"Домашняя работа 1"}
+    \pretitle{\vspace{\droptitle}\centering\huge}
+  \posttitle{\par}
+    \author{Izotov Ilya}
+    \preauthor{\centering\large\emph}
+  \postauthor{\par}
+      \predate{\centering\large\emph}
+  \postdate{\par}
+    \date{"26 сентября 2018 г"}
+
+
+\begin{document}
+\maketitle
+
+\subsection{Работа с данными.}\label{--.}
+
+По адресу
+\url{http://people.math.umass.edu/~anna/Stat597AFall2016/rnf6080.dat}
+можно получить набор данных об осадках в Канаде с 1960 по 1980 годы.
+Необходимо загрузить эти данные при помощи \texttt{read.table}.
+Воспользуйтесь справкой, чтобы изучить аргументы, которые принимает
+функция.
+
+\begin{itemize}
+\tightlist
+\item
+  Загрузите данные в датафрейм, который назовите \texttt{data.df}.
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{data.df <-}\StringTok{ }\KeywordTok{read.table}\NormalTok{(}\StringTok{"http://people.math.umass.edu/~anna/Stat597AFall2016/rnf6080.dat"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{itemize}
+\tightlist
+\item
+  Сколько строк и столбцов в \texttt{data.df}? Если получилось не 5070
+  наблюдений 27 переменных, то проверяйте аргументы.
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{length}\NormalTok{(data.df[}\DecValTok{1}\NormalTok{,]); }\KeywordTok{length}\NormalTok{(data.df[,}\DecValTok{1}\NormalTok{])}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 27
+\end{verbatim}
+
+\begin{verbatim}
+## [1] 5070
+\end{verbatim}
+
+\begin{itemize}
+\tightlist
+\item
+  Получите имена колонок из \texttt{data.df}.
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{names}\NormalTok{(data.df)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##  [1] "V1"  "V2"  "V3"  "V4"  "V5"  "V6"  "V7"  "V8"  "V9"  "V10" "V11"
+## [12] "V12" "V13" "V14" "V15" "V16" "V17" "V18" "V19" "V20" "V21" "V22"
+## [23] "V23" "V24" "V25" "V26" "V27"
+\end{verbatim}
+
+\begin{verbatim}
+Как видно, стандартные имена столбцов записываются как V1, V2...
+\end{verbatim}
+
+\begin{itemize}
+\tightlist
+\item
+  Найдите значение из 5 строки седьмого столбца.
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{paste}\NormalTok{(data.df[}\DecValTok{5}\NormalTok{,}\DecValTok{7}\NormalTok{])}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] "0"
+\end{verbatim}
+
+\begin{itemize}
+\tightlist
+\item
+  Напечатайте целиком 2 строку из \texttt{data.df}
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{paste}\NormalTok{(data.df[}\DecValTok{2}\NormalTok{,])}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##  [1] "60" "4"  "2"  "0"  "0"  "0"  "0"  "0"  "0"  "0"  "0"  "0"  "0"  "0" 
+## [15] "0"  "0"  "0"  "0"  "0"  "0"  "0"  "0"  "0"  "0"  "0"  "0"  "0"
+\end{verbatim}
+
+\begin{itemize}
+\tightlist
+\item
+  Объясните, что делает следующая строка кода
+  \texttt{names(data.df)\ \textless{}-\ c("year",\ "month",\ "day",\ seq(0,23))}.
+  Воспользуйтесь функциями \texttt{head} и \texttt{tail}, чтобы
+  просмотреть таблицу. Что представляют собой последние 24 колонки?
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{names}\NormalTok{(data.df) <-}\StringTok{ }\KeywordTok{c}\NormalTok{(}\StringTok{"year"}\NormalTok{, }\StringTok{"month"}\NormalTok{, }\StringTok{"day"}\NormalTok{, }\KeywordTok{seq}\NormalTok{(}\DecValTok{0}\NormalTok{,}\DecValTok{23}\NormalTok{))}
+\KeywordTok{head}\NormalTok{(data.df)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##   year month day 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21
+## 1   60     4   1 0 0 0 0 0 0 0 0 0 0  0  0  0  0  0  0  0  0  0  0  0  0
+## 2   60     4   2 0 0 0 0 0 0 0 0 0 0  0  0  0  0  0  0  0  0  0  0  0  0
+## 3   60     4   3 0 0 0 0 0 0 0 0 0 0  0  0  0  0  0  0  0  0  0  0  0  0
+## 4   60     4   4 0 0 0 0 0 0 0 0 0 0  0  0  0  0  0  0  0  0  0  0  0  0
+## 5   60     4   5 0 0 0 0 0 0 0 0 0 0  0  0  0  0  0  0  0  0  0  0  0  0
+## 6   60     4   6 0 0 0 0 0 0 0 0 0 0  0  0  0  0  0  0  0  0  0  0  0  0
+##   22 23
+## 1  0  0
+## 2  0  0
+## 3  0  0
+## 4  0  0
+## 5  0  0
+## 6  0  0
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{tail}\NormalTok{(data.df)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##      year month day 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20
+## 5065   80    11  25 0 0 0 0 0 0 0 0 0 0  0  0  0  0  0  0  0  0  0  0  0
+## 5066   80    11  26 0 0 0 0 0 0 0 0 0 0  0  0  0  0  0  0  0  0  0  0  0
+## 5067   80    11  27 0 0 0 0 0 0 0 0 0 0  0  0  0  0  0  0  0  0  0  0  0
+## 5068   80    11  28 0 0 0 0 0 0 0 0 0 0  0  0  0  0  0  0  0  0  0  0  0
+## 5069   80    11  29 0 0 0 0 0 0 0 0 0 0  0  0  0  0  0  0  0  0  0  0  0
+## 5070   80    11  30 0 0 0 0 0 0 0 0 0 0  0  0  0  0  0  0  0  0  0  0  0
+##      21 22 23
+## 5065  0  0  0
+## 5066  0  0  0
+## 5067  0  0  0
+## 5068  0  0  0
+## 5069  0  0  0
+## 5070  0  0  0
+\end{verbatim}
+
+\begin{verbatim}
+Первая строка дает колонкам названия. 
+1 колонка - год, 2 - месяц, 3 - день, остальные - час от 0 до 23. 
+Head показывает верхнюю часть таблицы, а tail - нижнюю. 
+\end{verbatim}
+
+\begin{itemize}
+\tightlist
+\item
+  Добавьте новую колонку с названием \emph{daily}, в которую запишите
+  сумму крайних правых 24 колонок. Постройте гистограмму по этой
+  колонке. Какие выводы можно сделать?
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{data.df.daily <-}\StringTok{ }\KeywordTok{data.frame}\NormalTok{(data.df, }\DataTypeTok{daily=}\KeywordTok{rowSums}\NormalTok{(data.df)}\OperatorTok{-}\NormalTok{data.df}\OperatorTok{$}\NormalTok{year}\OperatorTok{-}\NormalTok{data.df}\OperatorTok{$}\NormalTok{month}\OperatorTok{-}\NormalTok{data.df}\OperatorTok{$}\NormalTok{day)}
+\KeywordTok{hist}\NormalTok{(data.df.daily}\OperatorTok{$}\NormalTok{daily)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{hw01_files/figure-latex/unnamed-chunk-7-1.pdf}
+
+\begin{verbatim}
+В данных имеются отрицательные значения. Эти данные необходимо обнулить, т.к. таких значений быть на практике не может.
+\end{verbatim}
+
+\begin{itemize}
+\tightlist
+\item
+  Создайте новый датафрейм \texttt{fixed.df} в котром исправьте
+  замеченную ошибку. Постройте новую гистограмму, поясните почему она
+  более корректна.
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{fixed.df <-}\StringTok{ }\NormalTok{data.df.daily}
+\NormalTok{fixed.df[fixed.df }\OperatorTok{<}\StringTok{ }\DecValTok{0}\NormalTok{] <-}\StringTok{ }\DecValTok{0}
+\KeywordTok{hist}\NormalTok{(fixed.df}\OperatorTok{$}\NormalTok{daily)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{hw01_files/figure-latex/unnamed-chunk-8-1.pdf}
+
+\begin{verbatim}
+Получившаяся гистограмма более корректна, поскольку имеет только неотрицательные значения. Ошибочные отрицательные значения приравнены к 0.
+\end{verbatim}
+
+\subsection{Синтаксис и типизирование}\label{--}
+
+\begin{itemize}
+\tightlist
+\item
+  Для каждой строки кода поясните полученный результат, либо объясните
+  почему она ошибочна.
+\end{itemize}
+
+\begin{verbatim}
+v <- c("4", "8", "15", "16", "23", "42")
+max(v)
+sort(v)
+sum(v)
+\end{verbatim}
+
+\texttt{v\ \textless{}-\ c("4",\ "8",\ "15",\ "16",\ "23",\ "42")} - в
+переменную v помещается вектор символов (char)
+
+\texttt{max(v)} - поиск наибольшего символа, с которого начнется строка.
+В кодировке код цифры 8 стоит после цифр 0-7, поэтому максимальным
+элементом вектора будет выбран символ ``8''
+
+\texttt{sort(v)} - сортировка элементов вектора по возрастанию. Символ
+``8'' будет последним, поскольку он максимальный. ``15'' - будет первым,
+``16'' - вторым, так как оба элемента начинаются на одинаковый символ,
+то будет сравнение по второму символу. И так дальше.
+
+\texttt{sum(v)} - выполнено не будет, так как тип вектора символьный, а
+не числовой.
+
+\begin{itemize}
+\tightlist
+\item
+  Для следующих наборов команд поясните полученный результат, либо
+  объясните почему они ошибочна.
+\end{itemize}
+
+\begin{verbatim}
+#Набор команд 1
+v2 <- c("5",7,12)
+v2[2] + v2[3]
+
+#Набор команд 2
+df3 <- data.frame(z1="5",z2=7,z3=12)
+df3[1,2] + df3[1,3]
+
+#Набор команд 3
+l4 <- list(z1="6", z2=42, z3="49", z4=126)
+l4[[2]] + l4[[4]]
+l4[2] + l4[4]
+\end{verbatim}
+
+Набор команд 1 - вторая команда не будет выполнена, поскольку при
+инициализации переменной v2 в нее был передан элемент типа char. Вектор
+может хранить в себе элементы только одного типа, поэтому остальные
+элементы вектора тоже стали типа char. Суммировать элементы типа char
+оператором + не получится.
+
+Набор команд 2 - создает датафрейм размером 1х3. Датафрейм может иметь в
+своем составе разные типы элементов, поэтому в данном случае будет
+успешно выполнено сложение двух чисел.
+
+Набор команд 3 - создает список элементов. Элементы так же могут быть
+разных типов. Первое сложение успешно выполняется, поскольку указывается
+конкретный порядковый номер элемента списка. Следующая команда выполнена
+не будет, поскольку неправильное обращение к элементу. Правильным
+вариантом будет \texttt{l4\$z2{[}1{]}+l4\$z4{[}1{]}}.
+
+\subsection{Работа с функциями и операторами}\label{----}
+
+\begin{itemize}
+\tightlist
+\item
+  Оператор двоеточие создаёт последовательность целых чисел по порядку.
+  Этот оператор --- частный случай функции \texttt{seq()}, которую вы
+  использовали раньше. Изучите эту функцию, вызвав команду
+  \texttt{?seq}. Испольуя полученные знания выведите на экран:
+\end{itemize}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Числа от 1 до 10000 с инкрементом 372.
+\end{enumerate}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{seq}\NormalTok{(}\DataTypeTok{from =} \DecValTok{1}\NormalTok{, }\DataTypeTok{to =} \DecValTok{10000}\NormalTok{, }\DataTypeTok{by=}\DecValTok{372}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##  [1]    1  373  745 1117 1489 1861 2233 2605 2977 3349 3721 4093 4465 4837
+## [15] 5209 5581 5953 6325 6697 7069 7441 7813 8185 8557 8929 9301 9673
+\end{verbatim}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\setcounter{enumi}{1}
+\tightlist
+\item
+  Числа от 1 до 10000 длиной 50.
+\end{enumerate}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{seq}\NormalTok{(}\DataTypeTok{from=}\DecValTok{1}\NormalTok{, }\DataTypeTok{to=}\DecValTok{10000}\NormalTok{, }\DataTypeTok{length.out =} \DecValTok{50}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##  [1]     1.0000   205.0612   409.1224   613.1837   817.2449  1021.3061
+##  [7]  1225.3673  1429.4286  1633.4898  1837.5510  2041.6122  2245.6735
+## [13]  2449.7347  2653.7959  2857.8571  3061.9184  3265.9796  3470.0408
+## [19]  3674.1020  3878.1633  4082.2245  4286.2857  4490.3469  4694.4082
+## [25]  4898.4694  5102.5306  5306.5918  5510.6531  5714.7143  5918.7755
+## [31]  6122.8367  6326.8980  6530.9592  6735.0204  6939.0816  7143.1429
+## [37]  7347.2041  7551.2653  7755.3265  7959.3878  8163.4490  8367.5102
+## [43]  8571.5714  8775.6327  8979.6939  9183.7551  9387.8163  9591.8776
+## [49]  9795.9388 10000.0000
+\end{verbatim}
+
+\begin{itemize}
+\tightlist
+\item
+  Функция \texttt{rep()} повторяет переданный вектор указанное число
+  раз. Объясните разницу между \texttt{rep(1:5,times=3)} и
+  \texttt{rep(1:5,\ each=3)}.
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{rep}\NormalTok{(}\DecValTok{1}\OperatorTok{:}\DecValTok{5}\NormalTok{, }\DataTypeTok{times=}\DecValTok{3}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##  [1] 1 2 3 4 5 1 2 3 4 5 1 2 3 4 5
+\end{verbatim}
+
+Данный вектор будет повторяться в том порядке, в котором передан был
+изначально. В times указано количество повторений.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{rep}\NormalTok{(}\DecValTok{1}\OperatorTok{:}\DecValTok{5}\NormalTok{, }\DataTypeTok{each=}\DecValTok{3}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##  [1] 1 1 1 2 2 2 3 3 3 4 4 4 5 5 5
+\end{verbatim}
+
+В данном случае каждый элемент вектора будет повторен сразу друг за
+другом в количестве раз, указанном в each.
+
+
+\end{document}
