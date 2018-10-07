@@ -38,7 +38,7 @@ estimate.scaling.exponent <- function(a, y0=6611, response=gmp$pcgmp,
 a <- estimate.scaling.exponent(0.15)
 
 #С помошью полученного коэффициента постройте кривую (функция curve) зависимости
-curve(6611*x^a$a, xlab = "Население, человек", ylab = "Доход на душу населения, $ на душу населения", from = min(gmp$pop), to=max(gmp$pop))
+curve(6611*x^a$a, xlab = "Население, человек", ylab = "Доход на душу населения, $ на душу населения в год", from = min(gmp$pop), to=max(gmp$pop))
 
 #Удалите точку из набора исходных данных случайным образом, как изменилось статистическая оценка коэффициента a?
 rnd <- runif(1 ,min = 1, max = max(gmp$ID))

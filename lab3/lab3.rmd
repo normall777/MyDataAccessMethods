@@ -1,0 +1,171 @@
+---
+title: "Лабораторная работа 3"
+author: "Izotov Ilya"
+date: '5 октября 2018 г '
+output: html_document
+---
+
+## Задачи для лабораторной: 
+* работа с текстом;
+* использование регулярных выражений для извлечения данных;
+* переписывание существующего кода;
+* ассиметричные распределения.
+
+## Исходные данные
+Файл _forbes.htm_ содержит список богатейших американцев по версии журнала Форбс.
+На его примере потренируемся в разборе html страниц.
+
+### Задание 1
+1. Используйте команду ``readLines`` для загрузки файла в текстовый вектор _html_.
+```{r}
+html <- readLines("forbes.htm")
+```
+
+   1.1. Сколько строк в файле?
+```{r}
+length(html)
+```
+   
+   1.2. Сколько символов в файле?
+   
+   Без учета символов переноса строки:
+```{r}
+sum(nchar(html))
+```
+
+   С учетом:
+```{r}
+sum(nchar(html))+length(html)
+```
+   
+2. Откройте файл в текстовом редакторе. Найдите строки, содержащие данные о Билле Гейтсе и Ларри Эллисоне и запомните размер их дохода.
+3. Напишите шаблон регулярного выражения и используйте функцию ``grep``, чтобы извлечь размер дохода из данных в векторе _html_.
+Удостоверьтесь, что полученный вектор номеров строк содержит содержит ровно 100 записей и ссылается на номера строк в котрых действительно есть
+информация о доходе, а не просто первый попавшийся текст.
+```{r}
+# Получаю номера строк, в которых содержится номер рейтинга человека
+data.forbes <- grep(x=html, pattern = "<td class=\"rank\">[0-9]{1,2}</td>")
+length(data.forbes)
+# Например, для 3 строки списка (Ларри Эллисон)
+paste(html[data.forbes[3]]); paste(html[data.forbes[3]+3]); paste(html[data.forbes[3]+4]); paste(html[data.forbes[3]+5]); paste(html[data.forbes[3]+6]); paste(html[data.forbes[3]+7])
+```
+4. Напишите код, использовав регулярное выражение из п. 3, и функции ``regexpr`` и ``regmatches``, чтобы извлечь все данные о доходе.
+Проверьте следующее:
+```{r}
+# Функция, позволяющая извлечь данные из html файла
+# html.data - файл HTML
+# data.string - номера строк, из которых нужно будет считать данные
+# shift - сдвиг для перехода к другим строкам (если нужно)
+parser <- function(html.data=html, data.string = data.forbes, shift=0 ) {
+  pattern.string <- ">.*?<" # Шаблон для поиска
+  search.regexpr <- regexpr(pattern = pattern.string , text = html.data[data.string+shift]) # Поиск начала нужной строки (число)
+  out <- regmatches(x = html.data[data.string+shift], m = search.regexpr) # Выделение подстроки формата ">данные<"
+  out <- substr(out, 2, nchar(out)-1) # Удаление симолов ">" и "<"
+  return(out)
+}
+# Считывание номера рейтинга
+rank <- parser()
+name <- parser(shift = 3)
+worths <- parser(shift = 4)
+age <- parser(shift = 5)
+residence <- parser(shift = 6)
+source <- parser(shift = 7)
+df.forbes <- data.frame(rank, name, worths, age, residence, source)
+```
+
+   4.1. Должно быть ровно сто значений.
+```{r}
+length(df.forbes$name)
+```
+   
+   4.2. Самый большой доход должен быть доход Билла Гейтса
+```{r}
+worths <- parser(shift = 4) 
+worths <- substr(worths, 2, nchar(worths)-2)
+worths <- gsub(x = worths, pattern = ",", replacement = ".")
+worths <- as.numeric(worths)
+df.forbes[worths == max(worths),]
+```
+   
+   4.3. Такой доход должен быть в списке один раз.
+```{r}
+length(max(worths))
+```
+   
+   4.4. В всписке должна быть цифра, которую мы запомнили для Ларри Эллисона.
+```{r}
+df.forbes[worths == 41,]
+```
+   
+   4.5. Должно быть как минимум два значения, встречающихся несколько раз.
+```{r}
+summary(df.forbes$worths, maxsum = 15)
+```
+
+### Задание 2
+5. В данных доход представлен в формате **"$42 B"**, что означает **42 × 10^9**.
+Преобразуйте этот формат в числовой и сохраните в вектор _worths_. Удостоверьтесь в следующем:
+```{r}
+# В коде выше перевел из текста в числа
+worths <- worths*10^9
+df.forbes$worths <- worths
+```
+
+   5.1. _worths_ является вектором и в нём сто занчений типа _double_.
+```{r}
+typeof(df.forbes$worths)
+length(df.forbes$worths)
+```
+
+   5.2. Все элементы вектора _worths_ больше 1 миллиарда.
+```{r}
+length(df.forbes$worths[df.forbes$worths>10^9])
+```
+   
+   5.3. Самое большое число это доход Билла Гейтса.
+```{r}
+df.forbes[df.forbes$worths == max(df.forbes$worths),]
+```
+   
+6. Используйте вектор _worths_ , чтобы выяснить следующее:
+   6.1. Какова медиана ста этих записей?
+```{r}
+median(df.forbes$worths)
+```
+   
+   6.2. Средний доход?
+```{r}
+mean(df.forbes$worths)
+```
+   
+   6.3. Как много людей из этого списка имеют доход больше 5млрд., 10, 25? 
+```{r}
+length(df.forbes$worths[df.forbes$worths>5*10^9])
+length(df.forbes$worths[df.forbes$worths>10*10^9])
+length(df.forbes$worths[df.forbes$worths>25*10^9])
+```
+   
+   6.3.1. Какой их общий доход?
+```{r}
+sum(df.forbes$worths)
+```
+   
+   6.3.2. Какую долю от общего дохода, составляет пятёрка самых богатых.
+```{r}
+sum(df.forbes$worths[1:5])/sum(df.forbes$worths)
+```
+   
+   6.3.3. Какую долю от общего дохода, составляют 20 самых богатых.
+```{r}
+sum(df.forbes$worths[1:20])/sum(df.forbes$worths)
+```
+   
+   6.3.4. В данных [федерального резерва США](https://www.federalreserve.gov/releases/z1/current/html/introductory_text.htm) найдите
+   показатель дохода всех домохозяйств (Household net worth) в соответвующем году, какую долю
+   общего дохода составляют 100 богатейших людей.
+   
+```{r}
+sum(df.forbes$worths) / (78332*10^9)
+```
+   
+   
