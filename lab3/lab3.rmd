@@ -75,13 +75,13 @@ df.forbes <- data.frame(rank, name, worths, age, residence, source)
 
    4.1. Должно быть ровно сто значений.
 ```{r}
-length(df.forbes$name)
+stopifnot(length(df.forbes$name)==100)
 ```
    
    4.2. Самый большой доход должен быть доход Билла Гейтса
 ```{r}
 worths <- parser(shift = 4) 
-worths <- substr(worths, 2, nchar(worths)-2)
+worths <- regmatches(worths, regexpr(pattern = '([0-9]+,*[0-9]*)', worths))
 worths <- gsub(x = worths, pattern = ",", replacement = ".")
 worths <- as.numeric(worths)
 df.forbes[worths == max(worths),]

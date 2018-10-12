@@ -195,11 +195,10 @@ residence &lt;- parser(shift = 6)
 source &lt;- parser(shift = 7)
 df.forbes &lt;- data.frame(rank, name, worths, age, residence, source)</code></pre>
 <p>4.1. Должно быть ровно сто значений.</p>
-<pre class="r"><code>length(df.forbes$name)</code></pre>
-<pre><code>## [1] 100</code></pre>
+<pre class="r"><code>stopifnot(length(df.forbes$name)==100)</code></pre>
 <p>4.2. Самый большой доход должен быть доход Билла Гейтса</p>
 <pre class="r"><code>worths &lt;- parser(shift = 4) 
-worths &lt;- substr(worths, 2, nchar(worths)-2)
+worths &lt;- regmatches(worths, regexpr(pattern = '([0-9]+,*[0-9]*)', worths))
 worths &lt;- gsub(x = worths, pattern = &quot;,&quot;, replacement = &quot;.&quot;)
 worths &lt;- as.numeric(worths)
 df.forbes[worths == max(worths),]</code></pre>
