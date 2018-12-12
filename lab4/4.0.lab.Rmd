@@ -1,0 +1,119 @@
+---
+title: "Лабораторная работа №4"
+author: "Изотов Илья РИ-450004"
+---
+
+Пользуясь примером из лекции файл (5.0.R) проанализируйте данные о возрасте и физ. характеристиках молюсков
+https://archive.ics.uci.edu/ml/datasets/abalone
+```{r}
+data <- read.csv("https://archive.ics.uci.edu/ml/machine-learning-databases/abalone/abalone.data", header=TRUE, sep=",")
+summary(data)
+colnames(data)
+colnames(data) <- c("sex", "length", "diameter", "height", 
+                "whole_weight", "shucked_weight",
+                "viscera_weight", "shell_weight", "rings")
+
+colnames(data)
+data$sex <- factor(c("Female", "Infant", "Male")[data$sex])
+par(mfrow=c(1,3)) 
+hist(data$diameter, main = "Диаметр, мм")
+hist(data$height, main = "Высота, мм")
+hist(data$whole_weight, main = "Полный вес, гр")
+```
+
+Видим ассиметрию https://en.wikipedia.org/wiki/Skewness
+и выбросы (от них нужно избавиться)
+```{r}
+par(mfrow=c(1,3))
+plot(sort(data$diameter), main = "Диаметр, мм")
+plot(sort(data$height), main = "Высота, мм")
+plot(sort(data$whole_weight), main = "Полный вес, гр")
+```
+
+Визулизируем возможные зависимости
+```{R}
+par(mfrow=c(1,2)) 
+plot(data$diameter, data$whole_weight,'p',main = "Зависимость веса от диаметра")
+plot(data$height, data$whole_weight,'p',main = "Зависимость веса от высоты")
+```
+Хорошо видна зависимость, нужно её исследовать
+
+построить линейные модели при помощи функции lm, посмотреть их характеристики
+```{r}
+#Линейная модель вес~диаметр
+lm.whole_weight.diameter.1 <- lm(whole_weight~diameter, data = data)
+summary(lm.whole_weight.diameter.1)
+par(mfrow=c(2,2))
+plot(lm.whole_weight.diameter.1)
+
+#Линейная модель вес~высота
+lm.whole_weight.height.1 <- lm(whole_weight~height, data = data)
+summary(lm.whole_weight.height.1)
+par(mfrow=c(2,2))
+plot(lm.whole_weight.height.1)
+```
+
+#Очистка данных
+избавиться от выборосов, построить ещё модели и проверить их
+```{r}
+#Высота должна быть в промежутке от 0.02 до 0.4, диаметр больше 0.06
+#Вес не больше 2.4
+data.c <- data[data$height <=0.4, ]
+data.c <- data.c[data.c$height > 0.02, ]
+data.c <- data.c[data.c$diameter >= 0.06, ]
+data.c <- data.c[data.c$whole_weight <= 2.4, ]
+
+#Еще раз посмотрим на гистограммы, ассиметрия стала меньше 
+par(mfrow=c(1,3)) 
+hist(data.c$diameter, main = "Диаметр, мм")
+hist(data.c$height, main = "Высота, мм")
+hist(data.c$whole_weight, main = "Полный вес, гр")
+
+#Данные без выбросов
+par(mfrow=c(1,2))
+plot(data.c$diameter, data.c$whole_weight,'p',main = "Зависимость веса от диаметра")
+plot(data.c$height, data.c$whole_weight,'p',main = "Зависимость веса от высоты")
+
+#Построение вторых линейных моделей
+lm.whole_weight.diameter.2 <- lm(whole_weight~diameter, data = data.c)
+summary(lm.whole_weight.diameter.2)
+par(mfrow=c(2,2))
+plot(lm.whole_weight.diameter.2)
+
+lm.whole_weight.height.2 <- lm(whole_weight~height, data = data.c)
+summary(lm.whole_weight.height.2)
+par(mfrow=c(2,2))
+plot(lm.whole_weight.height.2)
+
+#Построение совмещенной линейной модели (height+diameter)
+lm.2 <- lm(whole_weight ~ height+diameter, data = data.c)
+summary(lm.2)
+par(mfrow=c(2,2))
+plot(lm.2)
+```
+
+разделить массив данных на 2 случайные части
+```{r}
+odds <- seq(1, nrow(data.c), by=2)
+data.c.in <- data.c[odds, ]
+data.c.out <- data.c[-odds, ]
+```
+
+подогнать модель по первой части
+```{r}
+lm.half <- lm(whole_weight ~ height+diameter, data=data.c.in)
+summary(lm.half)
+```
+
+спрогнозировать (функция predict) значения во второй части
+```{r}
+data.predict.out <- predict(lm.half, data.c.out)
+```
+
+проверить качество прогноза
+```{r}
+result_cor <- cor(data.c.out$whole_weight, data.predict.out)
+print(result_cor)
+```
+
+Как видно, коэффициент корреляции равен `r result_cor`, что говорит о хорошей модели данных.
