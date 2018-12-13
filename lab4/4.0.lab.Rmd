@@ -101,19 +101,36 @@ data.c.out <- data.c[-odds, ]
 
 подогнать модель по первой части
 ```{r}
+#Вес~диаметр
+lm.half.diameter <- lm(whole_weight ~ diameter, data=data.c.in)
+summary(lm.half.diameter)
+#Вес~высота
+lm.half.height <- lm(whole_weight ~ height, data=data.c.in)
+summary(lm.half.height)
+#Общая модель
 lm.half <- lm(whole_weight ~ height+diameter, data=data.c.in)
 summary(lm.half)
 ```
 
 спрогнозировать (функция predict) значения во второй части
 ```{r}
+data.predict.out.diameter <- predict(lm.half.diameter, data.c.out)
+data.predict.out.height <- predict(lm.half.height, data.c.out)
 data.predict.out <- predict(lm.half, data.c.out)
 ```
 
 проверить качество прогноза
 ```{r}
+result_cor.diameter <- cor(data.c.out$whole_weight, data.predict.out.diameter)
+result_cor.height <- cor(data.c.out$whole_weight, data.predict.out.height)
 result_cor <- cor(data.c.out$whole_weight, data.predict.out)
+
+#Результат модели вес~диаметр
+print(result_cor.diameter)
+#Результат модели вес~высота
+print(result_cor.height)
+#Результат совмещенной модели диаметр+высота
 print(result_cor)
 ```
 
-Как видно, коэффициент корреляции равен `r result_cor`, что говорит о хорошей модели данных.
+Как видно, коэффициент корреляции равен `r result_cor`, что говорит о хорошей модели данных. Общая модель данных предсказала результат качественнее, чем отдельно линейные модели вес~высота и вес~диаметр. 
