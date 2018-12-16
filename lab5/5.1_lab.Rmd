@@ -1,0 +1,165 @@
+---
+title: "Лабораторная работа №5"
+author: "Изотов Илья РИ-450004"
+---
+#Дисперсионный анализ. Пример
+
+Загрузим данные (требуется установить Рабочую папку с помощью setwd) или указать полный путь
+```{r}
+data = read.csv("https://www.sheffield.ac.uk/polopoly_fs/1.570199!/file/stcp-Rdataset-Diet.csv",row.names=1)
+summary(data)
+```
+
+
+Ознакомимся со структурой и переименуем колонки, как нам удобно
+https://www.sheffield.ac.uk/polopoly_fs/1.547015!/file/Diet_data_description.docx
+https://www.sheffield.ac.uk/mash/data
+
+```{r}
+colnames(data) <- c("gender", "age", "height", "initial.weight", 
+                    "diet.type", "final.weight")
+data$diet.type <- factor(c("A", "B", "C")[data$diet.type])
+#Добавим новую колонку - Похудение
+data$weight.loss = data$initial.weight - data$final.weight
+#Проанализиуем есть ли различия по типам диет
+boxplot(weight.loss~diet.type,data=data,col="light gray",
+        ylab = "Weight loss (kg)", xlab = "Diet type")
+abline(h=0,col="green")
+title(main = "Диаграмма потери веса в зависимости от диеты")
+
+#проверим сбалансированные ли данные
+table(data$diet.type)
+
+#График групповых средних
+library(gplots) #библиотека устанавливается с помощью install.packages
+```
+```{r}
+plotmeans(weight.loss ~ diet.type, data=data)
+title(main = "Диаграмма средних потери веса в зависимости от диеты")
+```
+```{r}
+aggregate(data$weight.loss, by = list(data$diet.type), FUN=sd)
+
+
+#Для подгонки ANOVA модели используем функцию aov, частный случай линейной модели lm
+#тест на межгрупповые различия
+fit <- aov(weight.loss ~ diet.type, data=data)
+summary(fit)
+
+#попарные различия между средними значениями для всех групп
+TukeyHSD(fit)
+
+#Tukey honest significant differences test)
+library(multcomp)
+par(mar=c(5,4,6,2))
+tuk <- glht(fit, linfct=mcp(diet.type="Tukey"))
+plot(cld(tuk, level=.05),col="lightgrey")
+title(main = "Диаграмма сравнения диет")
+```
+
+
+
+#Задание
+Добавить проверку на выбросы и избавиться от них
+```{r}
+summary(data)
+data <- data[!is.na(data["gender"]),]
+data$gender <- factor(data$gender, levels = c(0, 1))
+levels(data$gender) <- c("female","male")
+summary(data)
+head(data)
+data<-data[!(data$weight.loss>8 & data$diet.type == "A"),]
+data<-data[data$weight.loss>-2,]
+table(data$diet.type)
+```
+
+повторно проверсти все тесты и сравнить результаты с выбросами и без
+```{r}
+plot(data$diet.type, data$weight.loss)
+title(main = "Диаграмма потери веса в зависимости от диеты (без выбросов)")
+plotmeans(weight.loss ~ diet.type, data=data)
+title(main = "Диаграмма средних потери веса в зависимости от диеты (без выбросов")
+#Стандартные отклонения уменьшились
+aggregate(data$weight.loss, by = list(data$diet.type), FUN=sd)
+
+#Влияние диеты есть, после удаления выбросов значение параметра F понизилось, стало 3 звезды 
+fit1 <- aov(weight.loss ~ diet.type, data=data)
+summary(fit)
+summary(fit1)
+
+TukeyHSD(fit1)
+
+#Как и на предыдущем графике, 1 и 2 диеты похожи и отличаются от третьей
+par(mar=c(5,4,6,2))
+tuk1 <- glht(fit1, linfct=mcp(diet.type="Tukey"))
+plot(cld(tuk1, level=.05),col="lightgrey")
+title(main = "Диаграмма сравнения диет (без выбросов)")
+```
+
+    Как видно, после очистки данных от выбросов выяслилось большее влияние диеты на вес, но диета c отличается от диеты a и b. Лучшая диета - C.
+
+Открыть документ https://www.sheffield.ac.uk/polopoly_fs/1.547015!/file/Diet_data_description.docx и попытаться выполнить задания из него
+
+1. Парный t-test
+```{r}
+t.test(data$initial.weight, data$weight.loss)
+```
+
+    Данные являются статистически значимыми, потеря веса есть
+    
+2. Есть ли гендерные различия в потере веса:
+```{r}
+boxplot(weight.loss~gender,data=data,col="light gray",
+        ylab = "Weight loss (kg)", xlab = "Gender")
+abline(h=0,col="green")
+title(main = "Диаграмма потери веса в зависимости от пола")
+
+table(data$gender)
+
+plotmeans(weight.loss ~ gender, data=data)
+title(main = "Диаграмма средних потери веса в зависимости от пола")
+
+aggregate(data$weight.loss, by = list(data$gender), FUN=sd)
+
+#F value имеет высокое значение, зависимости от пола нет
+fit.gender <- aov(weight.loss ~ gender, data=data)
+summary(fit.gender)
+
+#Тоже можно наблюдать отсутствие зависимости
+TukeyHSD(fit.gender)
+
+# Выборки похожи
+par(mar=c(5,4,6,2))
+tuk.gender <- glht(fit.gender, linfct=mcp(gender="Tukey"))
+plot(cld(tuk.gender, level=.05),col="lightgrey")
+title(main = "Диаграмма сравнения похудения каждого гендера")
+```
+    
+    Потеря веса не зависит от пола
+
+3. Влияние диеты и пола на потерянный вес
+```{r}
+fit.gender.diet <- manova(cbind(gender,diet.type) ~ weight.loss, data=data)
+summary(fit.gender.diet)
+summary.aov(fit.gender.diet)
+```
+
+    По двухфакторному сравнению видно, что зависимость есть, однако если смотреть каждый фактор, то зависимости от пола по-прежнему нет.
+
+4. Посторить график потери веса в зависимости от типа диеты и гендера
+```{r}
+boxplot(weight.loss~gender+diet.type,data=data,col="light gray",
+        ylab = "Weight loss (kg)", xlab = "Gender")
+abline(h=0,col="green")
+title(main = "Диаграмма потери веса в зависимости от пола")
+```
+
+    Лучше всего потеряли вес женщины, которые были на диете C, мужчинам лучше подошла диета B. Хуже всего для женщин была диета А, как и для мужчин.
+    
+5. ANOVA для роста
+```{r}
+fit.height <- aov(weight.loss ~ height, data=data)
+summary(fit.height)
+```
+
+    Рост так же не влияет на величину сброшенного веса
